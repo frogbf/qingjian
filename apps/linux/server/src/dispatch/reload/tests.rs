@@ -87,6 +87,30 @@ fn broken_config_keeps_previous_settings() {
 }
 
 #[test]
+fn predict_toggle_reattaches_cloud() {
+    let dir = temp_dir("predict");
+    let mut router = watched(&dir, "");
+    assert!(!router.engine.prediction_enabled());
+
+    write_config(
+        &dir.join("config.toml"),
+        "[predict]\nenabled = true\napi_key = \"test\"\n",
+        200,
+    );
+    poll(&mut router);
+    assert!(router.engine.prediction_enabled());
+
+    write_config(
+        &dir.join("config.toml"),
+        "[predict]\nenabled = false\n",
+        300,
+    );
+    poll(&mut router);
+    assert!(!router.engine.prediction_enabled());
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+#[test]
 fn user_dictionary_import_applies_without_config_change() {
     let dir = temp_dir("dicts");
     let mut router = watched(&dir, "");

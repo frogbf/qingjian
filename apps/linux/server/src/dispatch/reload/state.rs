@@ -6,6 +6,7 @@ use std::time::{Instant, SystemTime};
 use qingjian_core::Language;
 use qingjian_dictionary::Dictionary;
 use qingjian_platform::{DictionariesConfig, LocalModelConfig, extra_dictionaries};
+use qingjian_predict::PredictConfig;
 
 /// 热加载状态。
 pub(crate) struct ConfigReload {
@@ -26,6 +27,9 @@ pub(crate) struct ConfigReload {
 
     /// 上次看到的用户 `dicts/` 快照（路径、mtime、长度）。
     pub(super) dictionary_files: Vec<(PathBuf, Option<SystemTime>, u64)>,
+
+    /// 已应用的 `[predict]`。
+    pub(super) applied_predict: PredictConfig,
 
     /// 已应用的 `[dictionaries]`。
     pub(super) applied_dictionaries: DictionariesConfig,

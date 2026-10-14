@@ -1,5 +1,5 @@
 //! 配置热加载：空闲时看 `config.toml` 的 mtime，改了就重读并应用（与 Windows Server 的 `dispatch/reload` 对齐）。
-//! 只重设启动时会应用的那些项；便宜的无条件重设，本地模型 / 释义表 / 附加词库按配置变化重建，
+//! 只重设启动时会应用的那些项；便宜的无条件重设，云联想 / 本地模型 / 释义表 / 附加词库按配置变化重建，
 //! 用户 `dicts/` 目录的文件增删也跟着重装。拼音显示位置在会话握手时交给插件，改了要重启服务。
 
 mod state;
@@ -27,7 +27,7 @@ fn mtime(path: &Path) -> Option<SystemTime> {
 }
 
 impl Router {
-    /// 开启热加载：记下路径、数据目录与当前已应用的 dictionaries / model / 学习语言。
+    /// 开启热加载：记下路径、数据目录与当前已应用的 predict / dictionaries / model / 学习语言。
     pub fn watch_config(
         &mut self,
         config: &Config,
@@ -42,6 +42,7 @@ impl Router {
             root,
             user_dir,
             dictionary_files: Vec::new(),
+            applied_predict: config.predict.clone(),
             applied_dictionaries: config.dictionaries.clone(),
             applied_model: config.model.clone(),
             applied_language: assembly::learning_language(config),
@@ -109,6 +110,11 @@ impl Router {
         let Some(mut reload) = self.reload.take() else {
             return;
         };
+        if config.predict != reload.applied_predict {
+            self.cancel_prediction();
+            self.configure_cloud(&config.predict);
+            reload.applied_predict = config.predict.clone();
+        }
         if config.model != reload.applied_model {
             self.apply_model_config(&config.model);
             reload.applied_model = config.model.clone();

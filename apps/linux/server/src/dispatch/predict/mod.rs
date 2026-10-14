@@ -3,7 +3,7 @@
 //!
 //! 防抖、超时和缓存都在 `qingjian_predict::Worker` 自己的线程里，Server 只等结果，节拍见 [`state`]。
 //! 首版不读应用光标前后的文字（Fcitx5 的 surrounding text 各家实现不一致），只按拼音与本地候选联想；
-//! 关着时 `[predict] slots` 的格子不存在，不画占位。Linux 没有配置热加载，改完 `[predict]` 要重启服务。
+//! 关着时 `[predict] slots` 的格子不存在，不画占位。改了 `[predict]` 由热加载（[`super::reload`]）重接。
 
 mod state;
 

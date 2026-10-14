@@ -78,13 +78,13 @@ page_keys = "-="
 
 ## 配置、隐私和数据
 
-首次运行生成 `~/.config/qingjian/config.toml`，保存后约一秒内生效，不用重启；`[general] preedit` 与 `[general] input_log` 例外，改完要重启青简服务。
+首次运行生成 `~/.config/qingjian/config.toml`，保存后约一秒内生效，不用重启；`[general] preedit`、`[general] input_log` 和 `.env` 里的密钥例外，改完要重启青简服务。
 `[general] preedit` 可设为 `both`（行内和候选窗口）、`inline`（只在行内）、`window`（只在候选窗口）；应用不支持行内显示时使用候选窗口。
 每页候选数、翻页键、学习、日志和辅助语言使用同一配置文件。`learning_language = "off"` 关闭中文候选的辅助语言释义与生词标记。系统面板外观由 Fcitx5 设置控制。
 
 当前预编译包随附含章·通变与含章·知微：优先用通变处理拼音整句与纠错，没有通变时回退到知微。自己的 `.qjm` 也可放入 `~/.local/share/qingjian/models/` 下对应的模型目录。`[model] enabled = false` 可关闭本地模型，见 [本地整句模型](../input/local-model.md)。
 
-云联想同样在这一份配置里开：`[predict] enabled = true`，填 `base_url` / `model`，密钥写 `api_key` 或放进配置同目录的 `.env`（`QINGJIAN_API_KEY=...`），然后重启青简服务；发什么、发给谁见 [云联想](../cloud/index.md)。
+云联想同样在这一份配置里开：`[predict] enabled = true`，填 `base_url` / `model`，密钥写 `api_key` 保存即生效，也可以放进配置同目录的 `.env`（`QINGJIAN_API_KEY=...`），这样需要重启青简服务；发什么、发给谁见 [云联想](../cloud/index.md)。
 与 macOS / Windows 的差别：Linux 读不到应用里光标前后的文字，只按所敲拼音和本地候选联想；云端词在 Fcitx5 候选面板里前面带 `☁`，整句补全画在候选窗的拼音右侧、`Tab` 接受，`preedit = "inline"`（拼音完全交给应用画）时不显示整句补全。
 
 `[general] shift_letter = "compose"` 让 Shift 大写字母参与中文组句，默认 `"passthrough"` 保持临时英文输入。
